@@ -11,6 +11,12 @@ git clone https://github.com/ravikeerthi-21/RobertBosch.git
 
 ## Usage
 
+Change working directory to 
+
+```bash
+cd robertBosch
+```
+
 Create a virtual environment
 
 ```bash
