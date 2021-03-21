@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import permissions
+# from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
+# from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 
 
 schema_view = get_schema_view(
@@ -32,10 +32,11 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('mentorship/', include('mentorship.urls')),
+    path('api/', include('robertBosch.mentorship.user.urls')),
+    path('api/', include('robertBosch.mentorship.profile.urls')),
    	path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
    	path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-   	path('api-token-auth/', obtain_jwt_token),
-   	path('api-token-refresh/', refresh_jwt_token),
-   	path('api-token-verify/', verify_jwt_token),
+   	# path('api-token-auth/', obtain_jwt_token),
+   	# path('api-token-refresh/', refresh_jwt_token),
+   	# path('api-token-verify/', verify_jwt_token),
 ]

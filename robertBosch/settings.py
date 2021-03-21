@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 from django.contrib.messages import constants as message_constants
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mentorship.apps.MentorshipConfig',
     'drf_yasg',
     'django_password_validators',
+    'rest_framework',
+    'robertBosch.mentorship.user',
+    'robertBosch.mentorship.profile',
 ]
 
 MIDDLEWARE = [
@@ -90,6 +93,17 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
+        'NAME': 'django_password_validators.password_character_requirements.password_validation.PasswordCharacterValidator',
+        'OPTIONS': {
+             'min_length_digit': 2,
+             # 'min_length_alpha': 8,
+             'min_length_special': 2,
+             # 'min_length_lower': 4,
+             # 'min_length_upper': 5,
+             'special_characters': "~!@#$%^&*()_+{}:;'[]"
+         }
+    },
+    {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
@@ -103,17 +117,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-    {
-        'NAME': 'django_password_validators.password_character_requirements.password_validation.PasswordCharacterValidator',
-        'OPTIONS': {
-             'min_length_digit': 2,
-             'min_length_alpha': 8,
-             'min_length_special': 2,
-             # 'min_length_lower': 4,
-             # 'min_length_upper': 5,
-             'special_characters': "~!@#$%^&*()_+{}:;'[]"
-         }
     }
 ]
 
@@ -143,7 +146,7 @@ FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 ]
 
-AUTH_USER_MODEL = 'auth.User'
+AUTH_USER_MODEL = 'user.User'
 
 REDOC_SETTINGS = {
    'LAZY_RENDERING': False,
@@ -168,7 +171,7 @@ LOGGING = {
     },
     'handlers': {
         'console': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
@@ -176,7 +179,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
         },
     },
@@ -193,10 +196,46 @@ EMAIL_USE_TLS = False
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAdminUser',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+}
+
+JWT_AUTH = {
+    'JWT_ENCODE_HANDLER':
+    'rest_framework_jwt.utils.jwt_encode_handler',
+
+    'JWT_DECODE_HANDLER':
+    'rest_framework_jwt.utils.jwt_decode_handler',
+
+    'JWT_PAYLOAD_HANDLER':
+    'rest_framework_jwt.utils.jwt_payload_handler',
+
+    'JWT_PAYLOAD_GET_USER_ID_HANDLER':
+    'rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler',
+
+    'JWT_RESPONSE_PAYLOAD_HANDLER':
+    'rest_framework_jwt.utils.jwt_response_payload_handler',
+
+    'JWT_SECRET_KEY': 'SECRET_KEY',
+    'JWT_GET_USER_SECRET_KEY': None,
+    'JWT_PUBLIC_KEY': None,
+    'JWT_PRIVATE_KEY': None,
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_LEEWAY': 0,
+    'JWT_EXPIRATION_DELTA': timedelta(days=7),
+    'JWT_AUDIENCE': None,
+    'JWT_ISSUER': None,
+
+    'JWT_ALLOW_REFRESH': False,
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
+
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_AUTH_COOKIE': None,
 }
