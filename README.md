@@ -11,10 +11,6 @@ git clone https://github.com/ravikeerthi-21/RobertBosch.git
 
 ## Usage
 
-```bash
-cd django-rest-app
-```
-
 Create a virtual environment
 
 ```bash
